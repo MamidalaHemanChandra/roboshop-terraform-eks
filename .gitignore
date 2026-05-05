@@ -1,0 +1,46 @@
+# Local .terraform directories
+**/.terraform/*
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Exclude all .tfvars files (sensitive variable values)
+*.tfvars
+*.tfvars.json
+
+# Override files (local only)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Plan output files
+*.plan
+
+# CLI configuration files
+.terraformrc
+terraform.rc
+
+# AWS credentials (if stored locally — better to use environment variables)
+.aws/
+.aws/credentials
+.aws/config
+
+# IDE/editor specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+.DS_Store
+
+# Lock file (optional — keep if you want reproducible builds)
+# .terraform.lock.hcl
+.terraform/
+.terraform.lock.hcl
