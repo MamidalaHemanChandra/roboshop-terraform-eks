@@ -3,7 +3,8 @@ module "eks" {
   version = "~> 21.0"
 
   name               = "${local.common_name}"
-  kubernetes_version = "1.33"
+  # kubernetes_version = "1.33"
+  kubernetes_version = var.eks_version
 
   addons = {
     coredns                = {}
@@ -33,22 +34,28 @@ module "eks" {
 
   # EKS Managed Node Group(s)
   eks_managed_node_groups = {
-    # blue = {
-    #   # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
-    #   ami_type       = "AL2023_x86_64_STANDARD"
-    #   instance_types = ["m5.xlarge"]
-    #   iam_role_additional_policie = {
-    #     amazonEBS = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
-    #     amazonEFS = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
-    #   }
+    blue = {
+      create = var.enable_blue
+      kubernetes_version = var.eks_nodegroup_blue_version
+      ami_type       = "AL2023_x86_64_STANDARD"
+      instance_types = ["m5.xlarge"]
+      iam_role_additional_policie = {
+        amazonEBS = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+        amazonEFS = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+      }
 
-    #   min_size     = 2
-    #   max_size     = 10
-    #   desired_size = 2
-    # }
+      min_size     = 2
+      max_size     = 10
+      desired_size = 2
+
+      labels = {
+        nodegroup = "blue"
+      }
+    }
 
     green = {
-      # Starting on 1.30, AL2023 is the default AMI type for EKS managed node groups
+      create = var.enable_green
+      kubernetes_version = var.eks_nodegroup_green_version
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["m5.xlarge"]
       iam_role_additional_policie = {
@@ -67,6 +74,11 @@ module "eks" {
       #     effect = "NO_SCHEDULE"
       #   }
       # }
+
+      labels = {
+        nodegroup = "green"
+      }
+
     }
   }
 
