@@ -3,8 +3,8 @@ module "eks" {
   version = "~> 21.0"
 
   name               = "${local.common_name}"
-  # kubernetes_version = "1.33"
-  kubernetes_version = var.eks_version
+  kubernetes_version = "1.33"
+  # kubernetes_version = var.eks_version
 
   addons = {
     coredns                = {}
@@ -35,8 +35,9 @@ module "eks" {
   # EKS Managed Node Group(s)
   eks_managed_node_groups = {
     blue = {
-      create = var.enable_blue
-      kubernetes_version = var.eks_nodegroup_blue_version
+      # create = var.enable_blue
+      # kubernetes_version = var.eks_nodegroup_blue_version
+      kubernetes_version = "1.33"
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["m5.xlarge"]
       iam_role_additional_policie = {
@@ -53,7 +54,7 @@ module "eks" {
       }
     }
 
-    green = {
+/*     green = {
       create = var.enable_green
       kubernetes_version = var.eks_nodegroup_green_version
       ami_type       = "AL2023_x86_64_STANDARD"
@@ -80,7 +81,7 @@ module "eks" {
       }
 
     }
-  }
+  } */
 
     
 

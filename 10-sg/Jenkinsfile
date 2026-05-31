@@ -10,7 +10,7 @@ pipeline {
     }
 
     options {
-        timeout(time: 10, unit: 'MINUTES') 
+        timeout(time: 60, unit: 'MINUTES') 
         disableConcurrentBuilds()
         ansiColor('xterm')
     }
@@ -53,6 +53,73 @@ pipeline {
                         """
                     }
                 }  
+            }
+        }
+
+        stage('Parallel Stage') {
+            parallel {
+                stage('Bastion') {
+                    steps {
+                        script {
+                            echo "Bastion Triggering downstream job: 20-bastion"
+                            build job: '20-bastion',
+                                wait: false,
+                                propagate: false
+                        }
+                    }
+                }
+                stage('SG Rules') {
+                    steps {
+                        script {
+                            echo "SG Rules Triggering downstream job: 30-sg-rules"
+                            build job: '30-sg-rules',
+                                wait: false,
+                                propagate: false
+                        }
+                    }
+                }
+                stage('ECR') {
+                    steps {
+                        script {
+                            echo "ECR Triggering downstream job: 40-ecr"
+                            build job: '40-ecr',
+                                wait: false,
+                                propagate: false
+                        }
+                    }
+                }
+                stage('ACM') {
+                    steps {
+                        script {
+                            echo "ACM Triggering downstream job: 70-acm"
+                            build job: '70-acm',
+                                wait: true,
+                                propagate: false
+                        }
+                    }
+                }
+                stage('EKS') {
+                    steps {
+                        script {
+                            echo "EKS Triggering downstream job: 90-eks"
+                            build job: '90-eks',
+                                wait: false,
+                                propagate: false
+                        }
+                    }
+                }
+
+            }
+        }
+
+        stage('Ingress ALB') {
+            steps {
+                script {
+                    echo "Ingress ALB Triggering downstream job: 80-ingress-alb"
+                    build job: '80-ingress-alb',
+                        wait: false,
+                        propagate: false
+                }
             }
         }
 

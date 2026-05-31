@@ -22,7 +22,7 @@ pipeline {
                 script {
                     withAWS(region:'us-east-1',credentials:'aws-creds') {
                         sh """
-                        cd 00-vpc
+                        cd 80-ingress-alb
                         terraform init
                         """
                     }
@@ -35,7 +35,7 @@ pipeline {
                 script {
                     withAWS(region:'us-east-1',credentials:'aws-creds') {
                         sh """
-                        cd 00-vpc
+                        cd 80-ingress-alb
                         terraform plan
                         """
                     }
@@ -48,7 +48,7 @@ pipeline {
                 script {
                     withAWS(region:'us-east-1',credentials:'aws-creds') {
                         sh """
-                        cd 00-vpc
+                        cd 80-ingress-alb
                         terraform apply -auto-approve
                         """
                     }
@@ -56,16 +56,8 @@ pipeline {
             }
         }
 
-        stage('SG Trigger Downstream Job') {
-            steps {
-                script {
-                    echo "SG Triggering downstream job: 10-sg"
-                    build job: '10-sg',
-                        wait: false,
-                        propagate: false
-                }
-            }
-        }
+
+
     }
 
     post { 
