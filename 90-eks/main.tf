@@ -3,7 +3,7 @@ module "eks" {
   version = "~> 21.0"
 
   name               = "${local.common_name}"
-  kubernetes_version = "1.33"
+  kubernetes_version = "1.32"
   # kubernetes_version = var.eks_version
 
   addons = {
@@ -37,7 +37,7 @@ module "eks" {
     blue = {
       # create = var.enable_blue
       # kubernetes_version = var.eks_nodegroup_blue_version
-      kubernetes_version = "1.33"
+      kubernetes_version = "1.32"
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = ["m5.xlarge"]
       iam_role_additional_policie = {
