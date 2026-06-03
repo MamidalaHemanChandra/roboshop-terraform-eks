@@ -44,3 +44,40 @@ resource "aws_route53_record" "ingress_alb" {
     evaluate_target_health = true
   }
 }
+
+resource "aws_lb_target_group" "ingress" {
+name = "${local.common_name}-frontend"
+port = 8080
+protocol = "HTTP"
+target_type = "ip"
+vpc_id = local.vpc_id
+deregistration_delay = 60
+
+  health_check {
+    enabled = true
+    path = "/"
+    protocol = "HTTP"
+    port = 8080
+    interval = 10
+    healthy_threshold = 3
+    unhealthy_threshold = 3
+    matcher = "200-299"
+    timeout = 2
+    }
+}
+
+resource "aws_lb_listener_rule" "ingress" {
+  listener_arn = aws_lb_listener.ingress_alb.arn
+  priority     = 10
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.ingress.arn
+  }
+
+  condition {
+    host_header {
+      values = ["${var.environment}.${var.domain_name}"]
+    }
+  }
+}
